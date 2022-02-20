@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:6.2-alpine
+    container_name: cache
+    restart: unless-stopped
+    # command: [ "redis-server", "--bind", "redis", "--port", "6379" ]
+    # networks:
+    #   - backend
+    ports:
+      - 6379:6379
+  app:
+    build: .
+    container_name: app
+    # restart: unless-stopped
+    # network_mode: bridge
+    # networks:
+    #   - backend
+    volumes:
+      - ./:/dist
+      - /node_modules
+    environment:
+      - PORT=8080
+      - REDIS_URL=redis://cache:6379
+    ports:
+      - 8080:8080
+    depends_on:
+      - redis
+    # networks:
+    #   backend:
+    #docker-compose up -d 
+    #docker exec -it <container-name> bash
