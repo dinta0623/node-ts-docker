@@ -1,6 +1,7 @@
 steps:
 - name: 'docker/compose:1.19.0'
-  args: ['up', '-d']
+  args: ['build']
+  #['up', '-d']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['tag', 'node-redis-test:latest', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
 images: ['gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
