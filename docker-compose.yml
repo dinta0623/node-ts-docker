@@ -1,4 +1,5 @@
-version: "3.8"
+version: "3"
+
 services:
   redis:
     image: redis:6.2-alpine
@@ -7,8 +8,10 @@ services:
     # command: [ "redis-server", "--bind", "redis", "--port", "6379" ]
     # networks:
     #   - backend
+    env_file:
+      - .env
     ports:
-      - 6379:6379
+      - "${REDIS_PORT}:${REDIS_PORT}"
   app:
     build: .
     container_name: app
@@ -19,11 +22,10 @@ services:
     volumes:
       - ./:/dist
       - /node_modules
-    environment:
-      - PORT=8080
-      - REDIS_URL=redis://cache:6379
+    env_file:
+      - .env
     ports:
-      - 8080:8080
+      - "${PORT}:${PORT}"
     depends_on:
       - redis
     # networks:

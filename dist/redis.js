@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redis_1 = require("redis");
 class RedisClient {
     constructor() {
-        this.client = (0, redis_1.createClient)();
+        this.client = (0, redis_1.createClient)({ url: process.env.REDIS_URL || 'redis://127.0.0.1:6379' });
         this.init();
     }
     init() {

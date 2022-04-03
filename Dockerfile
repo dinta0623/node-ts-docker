@@ -10,7 +10,7 @@ RUN npm install
 # Bundle app source
 COPY .  .
 #remider for using 8080
-EXPOSE 8080
+#EXPOSE 8080
 #add command 
 CMD [ "npm", "start" ]
 #to build this image : docker build . -t <image-name>

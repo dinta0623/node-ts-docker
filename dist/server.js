@@ -15,31 +15,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express_1 = __importDefault(require("express"));
 const redis_1 = __importDefault(require("./redis"));
-const app = (0, express_1.default)();
-const port = 8080;
-const redis = new redis_1.default();
-(function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield redis.connect();
-        console.log('😎 ok');
-    });
-}());
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-app.get('/set/:field/:value', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield redis.set(req.params.field, req.params.value);
-    return res.json({
-        status: 200,
-        message: `Successfully adding ${req.params.field}`
-    });
-}));
-app.get('/get/:field/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = redis.get(req.params.field);
-    return res.json({
-        status: 200,
-        message: `Successfully requesting ${req.params.field}`,
-        result: result || null
-    });
-}));
-app.listen(port, () => console.log('running well!'));
+class Server {
+    constructor() {
+        this.port = process.env.PORT || 8080;
+        this.app = (0, express_1.default)();
+        this.redis = new redis_1.default();
+    }
+    initialize() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.redis.connect().then(() => console.log('Connected to redis 😎'));
+            this.app.get('/', (req, res) => {
+                res.send('Hello World!');
+            });
+            this.app.get('/set/:field/:value', (req, res) => __awaiter(this, void 0, void 0, function* () {
+                yield this.redis.set(req.params.field, req.params.value);
+                return res.json({
+                    status: 200,
+                    message: `Successfully adding ${req.params.field}`
+                });
+            }));
+            this.app.get('/get/:field', (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const result = yield this.redis.get(req.params.field);
+                return res.json({
+                    status: 200,
+                    message: `Successfully requesting ${req.params.field}`,
+                    result: result || null
+                });
+            }));
+            this.app.listen(this.port, () => console.log('running well!'));
+        });
+    }
+}
+(new Server()).initialize();
