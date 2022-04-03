@@ -3,5 +3,10 @@ steps:
   args: ['build']
   #['up', '-d']
 - name: 'gcr.io/cloud-builders/docker'
+  env:
+    - 'NODE_ENV=${_NODE_ENV}'
+    - 'PORT=${_PORT}'
+    - 'REDIS_URL=${_REDIS_URL}'
+    - 'REDIS_PORT=${_REDIS_PORT}'
   args: ['tag', 'node-redis-test:latest', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
 images: ['gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
