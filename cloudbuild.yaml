@@ -1,7 +1,7 @@
 steps:
 - name: 'docker/compose:1.19.0'
-  args: ['build']
   #['up', '-d']
+  args: ['build']
 - name: 'gcr.io/cloud-builders/docker'
   env:
     - 'NODE_ENV=${_NODE_ENV}'
